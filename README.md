@@ -27,8 +27,22 @@
 * based on [tornado](http://www.tornadoweb.org/en/stable/) 
 web application framework
 * presents REST-like control API and/or web content using HTTP and JSON
-* dynamically-loaded plugin *adapters* provide system-specific functionality
+* dynamically-loaded plugin _**adapters**_ provide system-specific functionality
+* not going to cover this any further today :wink:
+
+![Tornado Logo](http://www.tornadoweb.org/en/stable/_images/tornado.png)
 
 ![ODIN control](images/odin_control.png)
 
-![Tornado Logo](http://www.tornadoweb.org/en/stable/_images/tornado.png) EXCALIBUR ODIN Architecture
+## odin-data
+
+* `odin-data` is the _**data plane**_ component of ODIN-based systems
+* provides a high-performance data capture and processing chain
+* designed (primarily) for systems sending data as _frames_ over 10GigE+ network links
+* consists of two communicating processes:
+  * frameReceiver
+  * frameProcessor
+* written in C++ with dynamically-loaded plugins for specific detectors
+
+![ODIN data](images/odin_data.png)
+
