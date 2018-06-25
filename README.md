@@ -150,6 +150,16 @@ number of received packets, missing packets, timestamp etc
     } FrameHeader;
 ```
 
+### External Software Dependencies
+
+The following libraries and packages are required:
+
+* [CMake](http://www.cmake.org) : build management system (version >= 2.8)
+* [Boost](http://www.boost.org) : portable C++ utility libraries. The following components are used - program_options, unit_test_framework, date_time, interprocess, bimap (version >= 1.41)
+* [ZeroMQ](http://zeromq.org) : high-performance asynchronous messaging library (version >= 3.2.4)
+* [Log4CXX](http://logging.apache.org/log4cxx/): Configurable message logger (version >= 0.10.0)
+* [HDF5](https://www.hdfgroup.org/HDF5): __Optional:__ if found, the filewriter application will be built (version >= 1.8.14)
+
 ## Demo using EXCALIBUR as example
 
 * Show how FR and FP apps are run together with simulated source of data
