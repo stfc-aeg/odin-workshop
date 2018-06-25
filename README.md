@@ -158,7 +158,7 @@ The following libraries and packages are required:
 * [Boost](http://www.boost.org) : portable C++ utility libraries. The following components are used - program_options, unit_test_framework, date_time, interprocess, bimap (version >= 1.41)
 * [ZeroMQ](http://zeromq.org) : high-performance asynchronous messaging library (version >= 3.2.4)
 * [Log4CXX](http://logging.apache.org/log4cxx/): Configurable message logger (version >= 0.10.0)
-* [HDF5](https://www.hdfgroup.org/HDF5): __Optional:__ if found, the filewriter application will be built (version >= 1.8.14)
+* [HDF5](https://www.hdfgroup.org/HDF5): __Optional:__ if found, the frame processor application will be built (version >= 1.8.14)
 
 ## Demo using EXCALIBUR as example
 
@@ -601,3 +601,4 @@ Install the project...
 * IDE integration with e.g. Eclipse, VS Code
 * Forking/cloning repos, branching model
 * CI jobs for unit & integration testing on Travis (+ Jenkins...?)
+* Porting PCAP playback scripts
