@@ -115,3 +115,89 @@ $ curl http://127.0.0.1:8888/api/0.1/excalibur/
   * live image preview endpoint
   * remote streaming endpoint
   * opportunities here for contributions!
+
+### Shared Buffers
+
+* shared buffers are *stateless* - message driven sharing
+* each buffer contains header followed by payload
+* Header contains metadata describing *state* of received frame, e.g. frame counter, 
+number of received packets, missing packets, timestamp etc
+* Headers are detector-specific, defined in common include files, e.g:
+```
+    /*
+     * ExcaliburDefinitions.h
+     */
+
+    typedef struct
+    {
+      uint32_t packets_received;
+      uint8_t  sof_marker_count;
+      uint8_t  eof_marker_count;
+      uint8_t  packet_state[max_num_subframes][max_primary_packets + num_tail_packets];
+    } FemReceiveState;
+
+    typedef struct
+    {
+        uint32_t frame_number;
+        uint32_t frame_state;
+        struct timespec frame_start_time;
+        uint32_t total_packets_received;
+        uint8_t total_sof_marker_count;
+        uint8_t total_eof_marker_count;
+        uint8_t num_active_fems;
+        uint8_t active_fem_idx[max_num_fems];
+        FemReceiveState fem_rx_state[max_num_fems];
+    } FrameHeader;
+```
+
+## Demo using EXCALIBUR as example
+
+* Show how FR and FP apps are run together with simulated source of data
+* Using *install* tree:
+```
+<<project_install_dir>> $ tree -d
+.
+|-- bin                     <- installed executables
+|-- config                  <- configuration files
+|   |-- client
+|   |-- control
+|   `-- data
+|       `-- client_msgs
+|-- include                 <- shared include files for building
+|   |-- frameProcessor
+|   |-- frameReceiver
+|   |-- rapidjson
+|   `-- zmq
+|-- lib                     <- loadable shared libraries
+|-- pcap
+`-- test
+```
+
+1. Start FR instance:
+```
+$ cd <<project_install_dir>>
+$ ./bin/frameReceiver --debug=2 --config=config/data/fr_test_excalibur_1.config
+```
+
+2. Start FP instance (in second terminal):
+```
+$cd <<project_installed_dir>>
+$./bin/frameProcessor --config=config/data/fp_test_excalibur_1.config
+```
+
+3. Send data - in this case captured packet playback:
+```
+$ python ../excalibur-detector/data/tools/python/excalibur_frame_producer.py -a 127.0.0.1 -p 61649 -n 1 pcap/excalibur_10_frames_tpcount_2000.pcap 
+I Extracting EXCALIBUR frame packets from PCAP file pcap/excalibur_10_frames_tpcount_2000.pcap
+I Found 10 frames in file with a total of 1320 packets and 10496480 bytes
+I Launching threads to send frames to 1 destination ports
+I Sending 1 frames to destination 127.0.0.1:61649 ...
+I Sent 1 frames with a total of 132 packets and 1049648 bytes, dropping 0 packets (0.0%)
+```
+
+* Can experiment with e.g. varying debug levels to see more/less output (from FR in particular)
+* Logging configurable, goes to stdout and to log files (see config)
+* Default output file location from FP is /tmp/test.hdf5
+* Can configure to varying degree from command line, config file and client control connection (not shown here)
+
+![EXCALIBUR image](images/excalibur.png)
