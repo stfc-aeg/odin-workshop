@@ -231,31 +231,30 @@ etc into your environment. To see what's available:
 ```
 $ module avail
 
--------------------------------------------- /aeg_sw/etc/modulefiles -------------------------------
+------------------------------------- /aeg_sw/etc/modulefiles --------------------------------------
+aeg_apps    aeg_tools   aeg_use_own
 
----------------------------------------- /usr/share/Modules/modulefiles ----------------------------
+---------------------------------- /usr/share/Modules/modulefiles ----------------------------------
 dot         module-git  module-info modules     null        use.own
 
------------------------------------------------ /etc/modulefiles -----------------------------------
-openmpi-1.4-psm-x86_64 openmpi-1.4-x86_64
-
-------------------------------------------- <home_dir>/.privatemodules -------------------------------
+------------------------------------ <home_dir>/.privatemodules ------------------------------------
 odin-data
 
---------------------------------------- /aeg_sw/apps/Modules/modulefiles ---------------------------
-arduino/1-8-3        dawn/2-7-0           eclipse/472_20171218
-dawn/2-5-0           eclipse/472(default) pycharm/2017-1-4
+--------------------------------- /aeg_sw/apps/Modules/modulefiles ---------------------------------
+arduino/1-8-3        dawn/2-5-0           eclipse/472(default) pycharm/2017-1-4
+cmake/3-11-4         dawn/2-7-0           eclipse/472_20171218
 
-------------------------------- /aeg_sw/tools/CentOS6-x86_64/Modules/modulefiles -------------------
-boost/1-48-0        hdf5/1-10-0         python/2-7-13       ruby/2              zeromq/4-2-1
-boost/1-66-0        log4cxx/0-10-0      python/3            ruby/2-4
-git/2-13-2          python/2            python/3-6          ruby/2-4-1
-git/2-17-1(default) python/2-7          python/3-6-2        subversion/1-8-19
+------------------------- /aeg_sw/tools/CentOS7-x86_64/Modules/modulefiles -------------------------
+boost/1-48-0      log4cxx/0-10-0    python/2-7-15     ruby/2            xilinx/2017-2
+boost/1-66-0      msgpack-c/2-1-5   python/3          ruby/2-4          xilinx/arm/2015-2
+boost/1-67-0      python/2          python/3-6        ruby/2-4-1        zeromq/4-2-1
+git/2-13-2        python/2-7        python/3-6-2      spark/2-3-0       zeromq/4-2-3
+hdf5/1-10-0       python/2-7-13     python/3-6-5      xilinx/2015-2
 ```
 
 * Load the correct modules for odin-development:
 ```
-$ module load boost/1-48-0 hdf5/1-10-0 zeromq/4-2-1 log4cxx/0-10-0
+$ module load boost/1-67-0 hdf5/1-10-0 zeromq/4-2-3 log4cxx/0-10-0
 ```
 * Sets up your shell environment with various paths etc:
 ```
