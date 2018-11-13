@@ -1,5 +1,4 @@
 # AEG ODIN workshops
-## 25 June 18
 
 # What is ODIN?
 
