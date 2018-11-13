@@ -138,7 +138,7 @@ logic on UI side, do it in the adapter
 
 * Create a python 2.7 virtual environment (various methods):
 ```
-$ mkvirtualenv -p /usr/local/bin/python2.7 odin-workshop-2.7
+$ mkvirtualenv -p /usr/local/bin/python2.7 odin-workshop-2.7
 Running virtualenv with interpreter /usr/local/bin/python2.7
 New python executable in /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/python2.7
 Also creating executable in /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/python
@@ -154,7 +154,7 @@ virtualenvwrapper.user_scripts creating /Users/tcn/.virtualenvs/odin-workshop-2.
 ```
 $ git clone git@github.com:odin-detector/odin-control.git
 Cloning into 'odin-control'...
-remote: Enumerating objects: 1150, done.
+remote: Enumerating objects: 1150, done.
 Receiving objects: 100% (1150/1150), 527.84 KiB | 1.38 MiB/s, done.
 Resolving deltas: 100% (597/597), done.
 
