@@ -60,7 +60,6 @@ class WorkshopAdapter(ApiAdapter):
             response = {'error': str(e)}
             status_code = 400
 
-        logging.debug(response)
         content_type = 'application/json'
 
         return ApiAdapterResponse(response, content_type=content_type,
