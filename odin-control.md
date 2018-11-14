@@ -12,6 +12,7 @@
   * API vs static URLs
   * UI layer
 * Getting started demo
+* Using an external adapter
 
 ## What is odin-control?
 
@@ -361,3 +362,117 @@ $ odin_server --config config/test_system_info.cfg
     "tornado_version": "4.5.3"
 }
 ```
+
+## Using an external adapter
+
+* There is a demo external adapter included with in this repo:
+
+```
+$ cd <path_to_workshop>/python
+$ tree -d
+.
+├── test
+│   ├── config
+│   └── static
+│       ├── css
+│       └── js
+│           └── bootstrap-3.3.6-dist
+│               ├── css
+│               ├── fonts
+│               └── js
+├── workshop
+└── workshop.egg-info
+```
+* Contains an installable python module `workshop` containing an adapter, plus a config file and
+static resources to demonstrate web interaction.
+
+* Install it:
+```
+$ python setup.py develop
+running develop
+running egg_info
+writing workshop.egg-info/PKG-INFO
+writing top-level names to workshop.egg-info/top_level.txt
+writing dependency_links to workshop.egg-info/dependency_links.txt
+reading manifest file 'workshop.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no files found matching 'odin_workshop/_version.py'
+writing manifest file 'workshop.egg-info/SOURCES.txt'
+running build_ext
+Creating /Users/tcn/.virtualenvs/odin-workshop-2.7/lib/python2.7/site-packages/workshop.egg-link (link to .)
+workshop 0+untagged.14.g3c36996 is already the active version in easy-install.pth
+
+Installed /Users/tcn/Develop/projects/odin-workshop/odin-workshop/python
+Processing dependencies for workshop==0+untagged.14.g3c36996
+Finished processing dependencies for workshop==0+untagged.14.g3c36996 
+```
+
+* Run `odin_server` with the appropriate config:
+```
+$ odin_server --config test/config/workshop.cfg
+[I 181114 11:46:22 server:65] Using the 0MQ IOLoop instance
+[D 181114 11:46:22 adapter:168] Launching background task with interval 1.00 secs
+[D 181114 11:46:22 adapter:228] Background task running, count = 0
+[D 181114 11:46:22 adapter:44] WorkshopAdapter loaded
+[D 181114 11:46:22 api:229] Registered API adapter class WorkshopAdapter from module workshop.adapter for path workshop
+[D 181114 11:46:22 default:40] Static path for default handler is test/static
+[I 181114 11:46:22 server:72] HTTP server listening on 127.0.0.1:8888
+[D 181114 11:46:23 adapter:228] Background task running, count = 1
+[D 181114 11:46:24 adapter:228] Background task running, count = 2
+[D 181114 11:46:25 adapter:228] Background task running, count = 3
+[D 181114 11:46:26 adapter:228] Background task running, count = 4
+...
+```
+
+* Interact with the adapter at the command line:
+```
+$ curl -s http://127.0.0.1:8888/api/0.1/workshop/ | python -m json.tool
+{
+    "background_task": {
+        "count": 2923,
+        "enable": true,
+        "interval": 1.0
+    },
+    "odin_version": "0.3.1+3.g8bcfc08.dirty",
+    "server_uptime": 2935.4133479595184,
+    "tornado_version": "4.5.3"
+}
+
+$ curl -s -H "Content-Type: application/json" -X PUT -d '{"enable": false}' 'http://localhost:8888/api/0.1/workshop/background_task' | python -m json.tool
+{
+    "background_task": {
+        "count": 10,
+        "enable": false,
+        "interval": 1.0
+    }
+}
+
+$ curl -s -H "Content-Type: application/json" -X PUT -d '{"interval": 0.1}' 'http://localhost:8888/api/0.1/workshop/background_task'
+{
+    "background_task": {
+        "count": 214,
+        "enable": true,
+        "interval": 0.1
+    }
+}
+```
+
+* Try the demo UI in a browser:
+
+![Workshop UI](images/odin_workshop_ui.png)
+
+* Explore the code in `workshop\adapter.py`. 
+* Demonstrates the following:
+    * Initialization with parameters from config file
+    * Handling GET/PUT
+    * Passing off get/set to Workshop class
+    * Use of nested parameter trees
+    * Read-only and read/write methods on parameters
+    * Background task in thread executor pool
+
+* Explore the static resources `index.html` and `odin_server.js`:
+
+    * UI interaction using HTML and JS
+    * Background polling in JS to keep adapter state view refreshed
+  
+## Questions ??
