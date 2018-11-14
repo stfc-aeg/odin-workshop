@@ -93,7 +93,7 @@ web browser
 
 * do the heavy lifting in `odin-control`
 * are python modules dynamically loaded into a running `odin_server` instance
-* do not need to be part of odin-control package
+* do _not_ need to be part of odin-control package
 * transform incoming HTTP requests (GET and PUT) into actions
 * expose a tree of parameter resources with read and/or write access via the REST API
 * typically expose JSON access to parameter resources
