@@ -37,7 +37,7 @@ class WorkshopAdapter(ApiAdapter):
 
         # Parse options
         background_task_enable = bool(self.options.get('background_task_enable', False))
-        background_task_interval = float(self.options.get('background_task_interval', False))
+        background_task_interval = float(self.options.get('background_task_interval', 1.0))
         
         self.workshop = Workshop(background_task_enable, background_task_interval)
 
@@ -90,9 +90,6 @@ class WorkshopAdapter(ApiAdapter):
         except (TypeError, ValueError) as e:
             response = {'error': 'Failed to decode PUT request body: {}'.format(str(e))}
             status_code = 400
-
-        return ApiAdapterResponse(response, status_code=status_code)
-        status_code = 200
 
         logging.debug(response)
 
