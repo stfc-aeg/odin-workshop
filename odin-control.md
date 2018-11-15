@@ -365,10 +365,20 @@ $ odin_server --config config/test_system_info.cfg
 
 ## Using an external adapter
 
-* There is a demo external adapter included with in this repo:
-
+* There is a demo external adapter included with in this repo
+* First clone this repo somehwere (alongside `odin-control` above would be fine):
 ```
-$ cd <path_to_workshop>/python
+$ git clone git@github.com:stfc-aeg/odin-workshop.git
+Cloning into 'odin-workshop'...
+remote: Enumerating objects: 77, done.
+remote: Counting objects: 100% (77/77), done.
+remote: Compressing objects: 100% (56/56), done.
+remote: Total 120 (delta 24), reused 67 (delta 15), pack-reused 43
+Receiving objects: 100% (120/120), 1.18 MiB | 1.89 MiB/s, done.
+Resolving deltas: 100% (39/39), done.
+
+$ cd odin-workshop/python
+
 $ tree -d
 .
 ├── test
