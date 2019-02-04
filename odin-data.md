@@ -91,10 +91,16 @@ number of received packets, missing packets, timestamp etc
 The following libraries and packages are required:
 
 * [CMake](http://www.cmake.org) : build management system (version >= 2.8)
-* [Boost](http://www.boost.org) : portable C++ utility libraries. The following components are used - program_options, unit_test_framework, date_time, interprocess, bimap (version >= 1.41)
+* [Boost](http://www.boost.org) : portable C++ utility libraries. The following components are 
+   used - program_options, unit_test_framework, date_time, interprocess, bimap (version >= 1.41)
 * [ZeroMQ](http://zeromq.org) : high-performance asynchronous messaging library (version >= 3.2.4)
 * [Log4CXX](http://logging.apache.org/log4cxx/): Configurable message logger (version >= 0.10.0)
-* [HDF5](https://www.hdfgroup.org/HDF5): __Optional:__ if found, the frame processor application will be built (version >= 1.8.14)
+* [HDF5](https://www.hdfgroup.org/HDF5): __Optional:__ if found, the frame processor application 
+will be built (version >= 1.8.14)
+* [LibPCAP](https://github.com/the-tcpdump-group/libpcap): TCPDUMP packet capture libraries - usually
+ installed with distro install tools. e.g. yum
+* [blosc](https://github.com/Blosc/c-blosc): An fast compression library - needed for the frame
+ processor compression plugin (__Beware__: API change with version 1.13 -> 1.14)
 
 ## Demo using EXCALIBUR as example
 
@@ -181,16 +187,16 @@ arduino/1-8-3        dawn/2-5-0           eclipse/472(default) pycharm/2017-1-4
 cmake/3-11-4         dawn/2-7-0           eclipse/472_20171218
 
 ------------------------- /aeg_sw/tools/CentOS7-x86_64/Modules/modulefiles -------------------------
-boost/1-48-0      log4cxx/0-10-0    python/2-7-15     ruby/2            xilinx/2017-2
-boost/1-66-0      msgpack-c/2-1-5   python/3          ruby/2-4          xilinx/arm/2015-2
-boost/1-67-0      python/2          python/3-6        ruby/2-4-1        zeromq/4-2-1
-git/2-13-2        python/2-7        python/3-6-2      spark/2-3-0       zeromq/4-2-3
-hdf5/1-10-0       python/2-7-13     python/3-6-5      xilinx/2015-2
+blosc/1-13-5   git/2-13-2       python/2       python/3-6    ruby/2-4        xilinx/arm/2015-2
+blosc/1-14-4   hdf5/1-10-0      python/2-7     python/3-6-2  ruby/2-4-1      zeromq/4-2-1
+boost/1-48-0   hdf5/1-10-4      python/2-7-13  python/3-6-5  spark/2-3-0     zeromq/4-2-3
+boost/1-66-0   log4cxx/0-10-0   python/2-7-15  qt/4-8-7      xilinx/2015-2
+boost/1-67-0   msgpack-c/2-1-5  python/3       ruby/2        xilinx/2017-2
 ```
 
 * Load the correct modules for odin-development:
 ```
-$ module load boost/1-67-0 hdf5/1-10-0 zeromq/4-2-3 log4cxx/0-10-0
+$ module load boost/1-67-0 hdf5/1-10-0 zeromq/4-2-3 log4cxx/0-10-0 blosc/1-13-5
 ```
 * Sets up your shell environment with various paths etc:
 ```
@@ -202,6 +208,8 @@ $ echo $ZEROMQ_ROOT
 /aeg_sw/tools/CentOS6-x86_64/zeromq/4-2-1/prefix
 $ echo $LOG4CXX_ROOT
 /aeg_sw/tools/CentOS6-x86_64/log4cxx/0-10-0/prefix
+$ echo $BLOSC_ROOT
+/aeg_sw/tools/CentOS7-x86_64/c-blosc/1-13-5/prefix
 ```
 
 * Create a project development dir (using AEG path convention if appropriate)
@@ -239,7 +247,7 @@ $ mkdir build && cd build
 ```
 $ cmake -DBoost_NO_BOOST_CMAKE=ON -DBOOST_ROOT=$BOOST_ROOT \
   -DZEROMQ_ROOTDIR=$ZEROMQ_ROOT -DLOG4CXX_ROOT_DIR=$LOG4CXX_ROOT \
-  -DHDF5_ROOT=$HDF5_ROOT \ 
+  -DHDF5_ROOT=$HDF5_ROOT -DBLOSC_ROOT_DIR=$BLOSC_ROOT \ 
   -DCMAKE_INSTALL_PREFIX=~/develop/projects/<project-name>/install ..
 ```
 (This is verbose and error-prone but you only have to do it once per setup). 
@@ -279,12 +287,25 @@ Looking for ZeroMQ headers and libraries
 -- Include directories: /aeg_sw/tools/CentOS6-x86_64/zeromq/4-2-1/prefix/include
 -- Libraries: /aeg_sw/tools/CentOS6-x86_64/zeromq/4-2-1/prefix/lib/libzmq.so
 
+Looking for pcap headers and libraries
+-- Found PCAP: /usr/lib64/libpcap.so (Required is at least version "1.4.0") 
+-- Performing Test PCAP_LINKS
+-- Performing Test PCAP_LINKS - Success
+
+Looking for blosc headers and libraries
+-- Searching Blosc Root dir: /aeg_sw/tools/CentOS7-x86_64/c-blosc/1-13-5/prefix
+-- Found Blosc: /aeg_sw/tools/CentOS7-x86_64/c-blosc/1-13-5/prefix/lib/libblosc.so
+
 Searching for HDF5
--- HDF5_ROOT set: /aeg_sw/tools/CentOS6-x86_64/hdf5/1-10-0/prefix
--- HDF5 include files:  /aeg_sw/tools/CentOS6-x86_64/hdf5/1-10-0/prefix/include
--- HDF5 libs:           /aeg_sw/tools/CentOS6-x86_64/hdf5/1-10-0/prefix/lib/libhdf5.so/aeg_sw/tools/CentOS6-x86_64/hdf5/1-10-0/prefix/lib/libhdf5_hl.so
--- HDF5 defs:
--- Found Doxygen: /usr/bin/doxygen (found version "1.6.1")
+-- HDF5_ROOT set: /aeg_sw/tools/CentOS7-x86_64/hdf5/1-10-4/prefix
+Determining odin-data version
+-- Git describe version: 0.7.0
+-- major:0 minor:7 patch:0 sha1:0.7.0
+-- short version: 0.7.0
+-- HDF5 include files:  /aeg_sw/tools/CentOS7-x86_64/hdf5/1-10-4/prefix/include
+-- HDF5 libs:           /aeg_sw/tools/CentOS7-x86_64/hdf5/1-10-4/prefix/lib/libhdf5.so/aeg_sw/tools/CentOS7-x86_64/hdf5/1-10-4/prefix/lib/libhdf5_hl.so
+-- HDF5 defs:           
+-- Found Doxygen: /usr/bin/doxygen (found version "1.8.5") 
 -- Configuring done
 -- Generating done
 -- Build files have been written to: <home_dir>/develop/projects/odin-demo/odin-data/build
@@ -364,16 +385,17 @@ Linking CXX executable ../../bin/frameProcessorTest
 [100%] Built target frameProcessorTest
 ```
 
-* This compiles ***four*** applications into `build/bin`:
+* This compiles ***five*** applications into `build/bin`:
 ```
 $ tree bin
 bin
 ├── frameProcessor
 ├── frameProcessorTest
 ├── frameReceiver
-└── frameReceiverTest
+├── frameReceiverTest
+└── frameSimulator
 
-0 directories, 4 files
+0 directories, 5 files
 ```
 
 * Run the unit test applications (optional):
