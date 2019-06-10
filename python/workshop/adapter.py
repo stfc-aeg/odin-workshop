@@ -141,6 +141,9 @@ class Workshop():
         # Get package version information
         version_info = get_versions()
 
+        # Set the background task counter to zero
+        self.background_task_counter = 0
+
         # Build a parameter tree for the background task
         bg_task = ParameterTree({
             'count': (lambda: self.background_task_counter, None),
@@ -155,9 +158,6 @@ class Workshop():
             'server_uptime': (self.get_server_uptime, None),
             'background_task': bg_task 
         })
-
-        # Set the background task counter to zero
-        self.background_task_counter = 0
 
         # Launch the background task if enabled in options
         if self.background_task_enable:
