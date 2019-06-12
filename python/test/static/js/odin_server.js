@@ -15,8 +15,8 @@ function poll_update() {
 function update_api_version() {
 
     $.getJSON('/api', function(response) {
-        $('#api-version').html(response.api_version);
-        api_version = response.api_version;
+        $('#api-version').html(response.api);
+        api_version = response.api;
     });
 }
 
