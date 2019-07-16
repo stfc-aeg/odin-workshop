@@ -7,9 +7,10 @@ Tim Nicholls, STFC Application Engineering
 import logging
 import tornado
 import time
+import sys
 from concurrent import futures
 
-from tornado.ioloop import IOLoop
+from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.concurrent import run_on_executor
 from tornado.escape import json_decode
 
@@ -38,7 +39,7 @@ class WorkshopAdapter(ApiAdapter):
         # Parse options
         background_task_enable = bool(self.options.get('background_task_enable', False))
         background_task_interval = float(self.options.get('background_task_interval', 1.0))
-        
+
         self.workshop = Workshop(background_task_enable, background_task_interval)
 
         logging.debug('WorkshopAdapter loaded')
@@ -112,9 +113,16 @@ class WorkshopAdapter(ApiAdapter):
 
         return ApiAdapterResponse(response, status_code=status_code)
 
+    def cleanup(self):
+        """Clean up adapter state at shutdown.
+
+        This method cleans up the adapter state when called by the server at e.g. shutdown.
+        It simplied calls the cleanup function of the workshop instance.
+        """
+        self.workshop.cleanup()
 
 class WorkshopError(Exception):
-    """Simple exception class for PSCUData to wrap lower-level exceptions."""
+    """Simple exception class to wrap lower-level exceptions."""
 
     pass
 
@@ -141,12 +149,14 @@ class Workshop():
         # Get package version information
         version_info = get_versions()
 
-        # Set the background task counter to zero
-        self.background_task_counter = 0
+        # Set the background task counters to zero
+        self.background_ioloop_counter = 0
+        self.background_thread_counter = 0
 
         # Build a parameter tree for the background task
         bg_task = ParameterTree({
-            'count': (lambda: self.background_task_counter, None),
+            'ioloop_count': (lambda: self.background_ioloop_counter, None),
+            'thread_count': (lambda: self.background_thread_counter, None),
             'enable': (lambda: self.background_task_enable, self.set_task_enable),
             'interval': (lambda: self.background_task_interval, self.set_task_interval),
         })
@@ -161,10 +171,7 @@ class Workshop():
 
         # Launch the background task if enabled in options
         if self.background_task_enable:
-            logging.debug(
-                "Launching background task with interval %.2f secs", background_task_interval
-            )
-            self.background_task()
+            self.start_background_tasks()
 
     def get_server_uptime(self):
         """Get the uptime for the ODIN server.
@@ -196,38 +203,81 @@ class Workshop():
         except ParameterTreeError as e:
             raise WorkshopError(e)
 
-    def set_task_interval(self, interval):
+    def cleanup(self):
+        """Clean up the Workshop instance.
 
+        This method stops the background tasks, allowing the adapter state to be cleaned up
+        correctly.
+        """
+        self.stop_background_tasks()
+
+    def set_task_interval(self, interval):
+        """Set the background task interval."""
         logging.debug("Setting background task interval to %f", interval)
         self.background_task_interval = float(interval)
         
     def set_task_enable(self, enable):
+        """Set the background task enable."""
+        enable = bool(enable)
 
-        logging.debug("Setting background task enable to %s", enable)
+        if enable != self.background_task_enable:
+            if enable:
+                self.start_background_tasks()
+            else:
+                self.stop_background_tasks()
 
-        current_enable = self.background_task_enable
-        self.background_task_enable = bool(enable)
+    def start_background_tasks(self):
+        """Start the background tasks."""
+        logging.debug(
+            "Launching background tasks with interval %.2f secs", self.background_task_interval
+        )
 
-        if not current_enable:
-            logging.debug("Restarting background task")
-            self.background_task()
+        self.background_task_enable = True
 
+        # Register a periodic callback for the ioloop task and start it
+        self.background_ioloop_task = PeriodicCallback(
+            self.background_ioloop_callback, self.background_task_interval * 1000
+        )
+        self.background_ioloop_task.start()
+
+        # Run the background thread task in the thread execution pool
+        self.background_thread_task()
+
+    def stop_background_tasks(self):
+        """Stop the background tasks."""
+        self.background_task_enable = False
+        self.background_ioloop_task.stop()
+
+    def background_ioloop_callback(self):
+        """Run the adapter background IOLoop callback.
+
+        This simply increments the background counter before returning. It is called repeatedly
+        by the periodic callback on the IOLoop.
+        """
+
+        if self.background_ioloop_counter < 10 or self.background_ioloop_counter % 20 == 0:
+            logging.debug(
+                "Background IOLoop task running, count = %d", self.background_ioloop_counter
+            )
+
+        self.background_ioloop_counter += 1
 
     @run_on_executor
-    def background_task(self):
-        """Run the adapter background task.
+    def background_thread_task(self):
+        """The the adapter background thread task.
 
-        This simply increments the background counter and sleeps for the specified interval,
-        before adding itself as a callback to the IOLoop instance to be called again.
-
+        This method runs in the thread executor pool, sleeping for the specified interval and 
+        incrementing its counter once per loop, until the background task enable is set to false.
         """
-        if self.background_task_counter < 10 or self.background_task_counter % 20 == 0:
-            logging.debug("Background task running, count = %d", self.background_task_counter)
 
-        self.background_task_counter += 1
-        time.sleep(self.background_task_interval)
+        sleep_interval = self.background_task_interval
 
-        if self.background_task_enable:
-            IOLoop.instance().add_callback(self.background_task)
-        else:
-            logging.debug("Background task no longer enabled, stopping")
+        while self.background_task_enable:
+            time.sleep(sleep_interval)
+            if self.background_thread_counter < 10 or self.background_thread_counter % 20 == 0:
+                logging.debug(
+                    "Background thread task running, count = %d", self.background_thread_counter
+                )
+            self.background_thread_counter += 1
+
+        logging.debug("Background thread task stopping")
