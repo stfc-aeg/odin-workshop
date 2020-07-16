@@ -20,7 +20,8 @@
 * based on [tornado](http://www.tornadoweb.org/en/stable/) 
 web application framework
 * dynamically-loaded plugin _**adapters**_ provide system-specific functionality
-* presents REST-like control API and/or web content using HTTP and JSON ([this](https://accelconf.web.cern.ch/icalepcs2017/papers/tupha212.pdf) published conference paper gives an overview of odin-control):
+* [this](https://accelconf.web.cern.ch/icalepcs2017/papers/tupha212.pdf) published conference paper gives an overview of odin-control
+* presents REST-like control API and/or web content using HTTP and JSON:
 ```
 $ curl http://127.0.0.1:8888/api/0.1/excalibur/
 
@@ -137,9 +138,9 @@ logic on UI side, do it in the adapter
 
 ## Getting started demo
 
-* For this demo you will need to have Python 3.X installed on your machine.
+* For this demo you will need to have Python 3.5 or later installed on your machine as Tornado 6 does not work with earlier versions.
 
-* Create a python 3 virtual environment in a directory of your choice: (various methods):
+* Create a python >= 3.5 virtual environment in a directory of your choice (various methods):
 
 Execute command:
 ```
