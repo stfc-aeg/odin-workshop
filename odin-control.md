@@ -16,10 +16,11 @@
 
 ## What is odin-control?
 
-* Python-based framework for the _**control plane**_ of detector systems
+* Python-based framework for the _**control plane**_ of detector systems 
 * based on [tornado](http://www.tornadoweb.org/en/stable/) 
 web application framework
 * dynamically-loaded plugin _**adapters**_ provide system-specific functionality
+* [this](https://accelconf.web.cern.ch/icalepcs2017/papers/tupha212.pdf) published conference paper gives an overview of odin-control
 * presents REST-like control API and/or web content using HTTP and JSON:
 ```
 $ curl http://127.0.0.1:8888/api/0.1/excalibur/
@@ -137,63 +138,98 @@ logic on UI side, do it in the adapter
 
 ## Getting started demo
 
-* Create a python 2.7 virtual environment (various methods):
+* For this demo you will need to have Python 3.5 or later installed on your machine as Tornado 6 does not work with earlier versions.
+
+* Create a python >= 3.5 virtual environment in a directory of your choice (various methods):
+
+Execute command:
 ```
-$ mkvirtualenv -p /usr/local/bin/python2.7 odin-workshop-2.7
-Running virtualenv with interpreter /usr/local/bin/python2.7
-New python executable in /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/python2.7
-Also creating executable in /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/python
-Installing setuptools, pip, wheel...done.
-virtualenvwrapper.user_scripts creating /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/predeactivate
-virtualenvwrapper.user_scripts creating /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/postdeactivate
-virtualenvwrapper.user_scripts creating /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/preactivate
-virtualenvwrapper.user_scripts creating /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/postactivate
-virtualenvwrapper.user_scripts creating /Users/tcn/.virtualenvs/odin-workshop-2.7/bin/get_env_details
+$ virtualenv odin-workshop-3.8.3
+```
+
+Terminal output:
+```
+created virtual environment CPython3.8.3.final.0-64 in 2470ms
+  creator CPython3Posix(dest=/u/user/odin-workshop/odin-workshop-3.8.3, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, via=copy, app_data_dir=/u/user/.local/share/virtualenv/seed-app-data/v1.0.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
 ```
 
 * Clone `odin-control` from GitHub:
-```
-$ git clone git@github.com:odin-detector/odin-control.git
-Cloning into 'odin-control'...
-remote: Enumerating objects: 1150, done.
-Receiving objects: 100% (1150/1150), 527.84 KiB | 1.38 MiB/s, done.
-Resolving deltas: 100% (597/597), done.
 
+Execute command:
+```
+$ git clone https://github.com/odin-detector/odin-control.git
+```
+
+Terminal output:
+
+```
+Cloning into 'odin-control'...
+remote: Enumerating objects: 121, done.
+remote: Counting objects: 100% (121/121), done.
+remote: Compressing objects: 100% (59/59), done.
+remote: Total 2057 (delta 53), reused 106 (delta 47), pack-reused 1936
+Receiving objects: 100% (2057/2057), 704.91 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (1255/1255), done.
+```
+
+* Install `odin-control` in develop mode (make sure that your virtual environment is activated):
+
+Execute commands:
+```
 $ cd odin-control
 ```
 
-* Install `odin-control` in develop mode:
 ```
 $ python setup.py develop
+```
+
+Terminal output:
+```
 running develop
 running egg_info
-creating odin.egg-info
-writing requirements to odin.egg-info/requires.txt
-writing odin.egg-info/PKG-INFO
-writing top-level names to odin.egg-info/top_level.txt
-writing dependency_links to odin.egg-info/dependency_links.txt
-writing entry points to odin.egg-info/entry_points.txt
-writing manifest file 'odin.egg-info/SOURCES.txt'
-reading manifest file 'odin.egg-info/SOURCES.txt'
+creating src/odin.egg-info
+writing src/odin.egg-info/PKG-INFO
+writing dependency_links to src/odin.egg-info/dependency_links.txt
+writing entry points to src/odin.egg-info/entry_points.txt
+writing requirements to src/odin.egg-info/requires.txt
+writing top-level names to src/odin.egg-info/top_level.txt
+writing manifest file 'src/odin.egg-info/SOURCES.txt'
+reading manifest file 'src/odin.egg-info/SOURCES.txt'
 reading manifest template 'MANIFEST.in'
-writing manifest file 'odin.egg-info/SOURCES.txt'
+warning: no files found matching 'odin/_version.py'
+writing manifest file 'src/odin.egg-info/SOURCES.txt'
 running build_ext
-Creating /Users/tcn/.virtualenvs/odin-workshop-2.7/lib/python2.7/site-packages/odin.egg-link (link to .)
-Adding odin 0.3.1+3.g8bcfc08 to easy-install.pth file
-Installing odin_server script to /Users/tcn/.virtualenvs/odin-workshop-2.7/bin
+Creating /u/user/odin-workshop/odin-workshop-3.8.3/lib/python3.8/site-packages/odin.egg-link (link to src)
+Adding odin 1.0.0 to easy-install.pth file
+Installing odin_server script to /u/user/odin-workshop/odin-workshop-3.8.3/bin
 
 << ... snip ... >>
 
-Installed /Users/tcn/.virtualenvs/odin-workshop-2.7/lib/python2.7/site-packages/six-1.11.0-py2.7.egg
-Finished processing dependencies for odin==0.3.1+3.g8bcfc08
+Installed /u/user/odin-workshop/odin-workshop-3.8.3/lib/python3.8/site-packages/tornado-6.0.4-py3.8-linux-x86_64.egg
+Finished processing dependencies for odin==1.0.0
 ```
 
 * Behold the glory that is `odin_server`:
+
+Execute command:
 ```
 $ which odin_server
-/Users/tcn/.virtualenvs/odin-workshop-2.7/bin/odin_server
+```
 
+Terminal output:
+```
+/u/user/odin-workshop/odin-workshop-3.8.3/bin/odin_server
+```
+
+Execute command:
+```
 $ odin_server --help
+```
+
+Terminal output:
+```
 usage: odin_server [-h] [--version] [--config FILE] [--adapters ADAPTERS]
                    [--http_addr HTTP_ADDR] [--http_port HTTP_PORT]
                    [--debug_mode DEBUG_MODE]
@@ -248,39 +284,30 @@ optional arguments:
                         touch the logging configuration.
 ``` 
 
-* Modify a simple configuration file (change `http_addr` to `127.0.0.1`):
-```
-$ cd odin/testing
-$ cat  config/test.cfg
-[server]
-debug_mode = 1
-http_port  = 8888
-http_addr  = 0.0.0.0
-static_path = ./static
-adapters   = dummy
-
-[tornado]
-logging = debug
-
-[adapter.dummy]
-module = odin.adapters.dummy.DummyAdapter
-background_task_enable = 1
-background_task_interval = 1.0
-```
+* Modify the `test.cfg` configuration file located in `odin-control/tests/config/` by changing the value of `http_addr` to `127.0.0.1`:
 
 * Start `odin_server` with a demo adapter and UI:
+
+Execute commands:
+```
+$ cd test
+```
+
 ```
 $ odin_server --config config/test.cfg --logging=debug --debug_mode=1
-[I 181113 15:24:54 server:65] Using the 0MQ IOLoop instance
-[D 181113 15:24:54 dummy:46] Launching background task with interval 1.00 secs
-[D 181113 15:24:54 dummy:61] DummyAdapter: background task running
-[D 181113 15:24:54 dummy:50] DummyAdapter loaded
-[D 181113 15:24:54 api:229] Registered API adapter class DummyAdapter from module odin.adapters.dummy for path dummy
-[D 181113 15:24:54 default:40] Static path for default handler is ./static
-[I 181113 15:24:54 server:72] HTTP server listening on 127.0.0.1:8888
-[D 181113 15:24:55 dummy:61] DummyAdapter: background task running
-[D 181113 15:24:56 dummy:61] DummyAdapter: background task running
-[D 181113 15:24:57 dummy:61] DummyAdapter: background task running
+```
+
+Terminal output:
+```
+[D 200715 15:57:39 dummy:47] Launching background task with interval 1.00 secs
+[D 200715 15:57:39 selector_events:59] Using selector: EpollSelector
+[D 200715 15:57:39 dummy:55] DummyAdapter loaded
+[D 200715 15:57:39 api:230] Registered API adapter class DummyAdapter from module odin.adapters.dummy for path dummy
+[D 200715 15:57:39 default:40] Static path for default handler is ./static
+[I 200715 15:57:39 server:63] HTTP server listening on 127.0.0.1:8888
+[D 200715 15:57:40 dummy:65] DummyAdapter: background task running, count = 0
+[D 200715 15:57:41 dummy:65] DummyAdapter: background task running, count = 1
+[D 200715 15:57:42 dummy:65] DummyAdapter: background task running, count = 2
 ```
 
 * Browse to the default UI:
@@ -289,53 +316,78 @@ $ odin_server --config config/test.cfg --logging=debug --debug_mode=1
 
 * Interrogate the REST API:
 
+Execute command:
 ```
 $ curl -s http://127.0.0.1:8888/api | python -m json.tool
+```
+
+Terminal output:
+```
 {
     "api_version": 0.1
 }
+```
 
+Execute command:
+```
 $ curl -s http://127.0.0.1:8888/api/0.1/adapters | python -m json.tool
+```
+
+Terminal output:
+```
 {
     "adapters": [
         "dummy"
     ]
 }
+```
 
+Execute command:
+```
 $ curl -s http://127.0.0.1:8888/api/0.1/dummy/ | python -m json.tool
+```
+
+Terminal output:
+```
 {
     "response": "DummyAdapter: GET on path "
 }
+```
 
+Execute command:
+```
 $ curl -s http://127.0.0.1:8888/api/0.1/dummy/random_path | python -m json.tool
+```
+
+Terminal output:
+```
 {
     "response": "DummyAdapter: GET on path random_path"
 }
+```
 
+Execute command:
+```
 $ curl -s -H "Content-Type: application/json" -X PUT -d '' 'http://localhost:8888/api/0.1/dummy/test_put' | python -m json.tool
+```
+
+Terminal output:
+```
 {
     "response": "DummyAdapter: PUT on path test_put"
 }
 ```
 
+
 * Try a different adapter:
 
+Execute command:
 ```
-$ cat config/test_system_info.cfg
-[server]
-debug_mode = 1
-http_port  = 8888
-http_addr  = 127.0.0.1
-static_path = static
-adapters   = system_info
-
-[tornado]
-logging = debug
-
-[adapter.system_info]
-module = odin.adapters.system_info.SystemInfoAdapter
-
 $ odin_server --config config/test_system_info.cfg
+```
+
+Terminal output:
+```
 [I 181113 15:46:00 server:65] Using the 0MQ IOLoop instance
 [D 181113 15:46:00 system_info:36] SystemInfoAdapter loaded
 [D 181113 15:46:00 api:229] Registered API adapter class SystemInfoAdapter from module odin.adapters.system_info for path system_info
@@ -347,8 +399,14 @@ $ odin_server --config config/test_system_info.cfg
 ```
 
 * `system_info` uses nested `ParameterTree` instances for API variables:
+
+Execute command:
 ```
-  curl -s http://127.0.0.1:8888/api/0.1/system_info/ | python -m json.tool
+$ curl -s http://127.0.0.1:8888/api/0.1/system_info/ | python -m json.tool
+```
+
+Terminal output:
+```
 {
     "odin_version": "0.3.1+3.g8bcfc08.dirty",
     "platform": {
@@ -367,8 +425,14 @@ $ odin_server --config config/test_system_info.cfg
 
 * There is a demo external adapter included with in this repo
 * First clone this repo somehwere (alongside `odin-control` above would be fine):
+
+Execute command:
 ```
-$ git clone git@github.com:stfc-aeg/odin-workshop.git
+$ git clone https://github.com/stfc-aeg/odin-workshop.git
+```
+
+Terminal output:
+```
 Cloning into 'odin-workshop'...
 remote: Enumerating objects: 77, done.
 remote: Counting objects: 100% (77/77), done.
@@ -376,10 +440,19 @@ remote: Compressing objects: 100% (56/56), done.
 remote: Total 120 (delta 24), reused 67 (delta 15), pack-reused 43
 Receiving objects: 100% (120/120), 1.18 MiB | 1.89 MiB/s, done.
 Resolving deltas: 100% (39/39), done.
+```
 
+Execute commands:
+```
 $ cd odin-workshop/python
+```
 
+```
 $ tree -d
+```
+
+Terminal output:
+```
 .
 ├── test
 │   ├── config
@@ -397,46 +470,66 @@ $ tree -d
 static resources to demonstrate web interaction.
 
 * Install it:
+
+Execute command:
 ```
 $ python setup.py develop
+```
+
+Terminal output:
+```
 running develop
 running egg_info
+creating workshop.egg-info
 writing workshop.egg-info/PKG-INFO
-writing top-level names to workshop.egg-info/top_level.txt
 writing dependency_links to workshop.egg-info/dependency_links.txt
+writing top-level names to workshop.egg-info/top_level.txt
+writing manifest file 'workshop.egg-info/SOURCES.txt'
 reading manifest file 'workshop.egg-info/SOURCES.txt'
 reading manifest template 'MANIFEST.in'
 warning: no files found matching 'odin_workshop/_version.py'
 writing manifest file 'workshop.egg-info/SOURCES.txt'
 running build_ext
-Creating /Users/tcn/.virtualenvs/odin-workshop-2.7/lib/python2.7/site-packages/workshop.egg-link (link to .)
-workshop 0+untagged.14.g3c36996 is already the active version in easy-install.pth
+Creating /u/user/odin-workshop/odin-workshop-3.8.3/lib/python3.8/site-packages/workshop.egg-link (link to .)
+Adding workshop 0+untagged.25.g4043dbc to easy-install.pth file
 
-Installed /Users/tcn/Develop/projects/odin-workshop/odin-workshop/python
-Processing dependencies for workshop==0+untagged.14.g3c36996
-Finished processing dependencies for workshop==0+untagged.14.g3c36996 
+Installed /u/user/odin-workshop/odin-workshop/python
+Processing dependencies for workshop==0+untagged.25.g4043dbc
+Finished processing dependencies for workshop==0+untagged.25.g4043dbc
 ```
 
 * Run `odin_server` with the appropriate config:
+
+Execute command:
 ```
 $ odin_server --config test/config/workshop.cfg
-[I 181114 11:46:22 server:65] Using the 0MQ IOLoop instance
-[D 181114 11:46:22 adapter:168] Launching background task with interval 1.00 secs
-[D 181114 11:46:22 adapter:228] Background task running, count = 0
-[D 181114 11:46:22 adapter:44] WorkshopAdapter loaded
-[D 181114 11:46:22 api:229] Registered API adapter class WorkshopAdapter from module workshop.adapter for path workshop
-[D 181114 11:46:22 default:40] Static path for default handler is test/static
-[I 181114 11:46:22 server:72] HTTP server listening on 127.0.0.1:8888
-[D 181114 11:46:23 adapter:228] Background task running, count = 1
-[D 181114 11:46:24 adapter:228] Background task running, count = 2
-[D 181114 11:46:25 adapter:228] Background task running, count = 3
-[D 181114 11:46:26 adapter:228] Background task running, count = 4
+```
+
+Terminal output: 
+```
+[D 200715 16:15:22 adapter:231] Launching background tasks with interval 1.00 secs
+[D 200715 16:15:22 selector_events:59] Using selector: EpollSelector
+[D 200715 16:15:22 adapter:45] WorkshopAdapter loaded
+[D 200715 16:15:22 api:230] Registered API adapter class WorkshopAdapter from module workshop.adapter for path workshop
+[D 200715 16:15:22 system_info:37] SystemInfoAdapter loaded
+[D 200715 16:15:22 api:230] Registered API adapter class SystemInfoAdapter from module odin.adapters.system_info for path system_info
+[D 200715 16:15:22 default:40] Static path for default handler is test/static
+[I 200715 16:15:22 server:63] HTTP server listening on 127.0.0.1:8888
+[D 200715 16:15:23 adapter:259] Background IOLoop task running, count = 0
+[D 200715 16:15:23 adapter:278] Background thread task running, count = 0
+[D 200715 16:15:24 adapter:259] Background IOLoop task running, count = 1
 ...
 ```
 
 * Interact with the adapter at the command line:
+
+Execute command:
 ```
 $ curl -s http://127.0.0.1:8888/api/0.1/workshop/ | python -m json.tool
+```
+
+Terminal output
+```
 {
     "background_task": {
         "count": 2923,
@@ -447,8 +540,15 @@ $ curl -s http://127.0.0.1:8888/api/0.1/workshop/ | python -m json.tool
     "server_uptime": 2935.4133479595184,
     "tornado_version": "4.5.3"
 }
+```
 
+Execute command:
+```
 $ curl -s -H "Content-Type: application/json" -X PUT -d '{"enable": false}' 'http://localhost:8888/api/0.1/workshop/background_task' | python -m json.tool
+```
+
+Terminal output
+```
 {
     "background_task": {
         "count": 10,
@@ -456,8 +556,15 @@ $ curl -s -H "Content-Type: application/json" -X PUT -d '{"enable": false}' 'htt
         "interval": 1.0
     }
 }
+```
 
+Execute command:
+```
 $ curl -s -H "Content-Type: application/json" -X PUT -d '{"interval": 0.1}' 'http://localhost:8888/api/0.1/workshop/background_task'
+```
+
+Terminal output
+```
 {
     "background_task": {
         "count": 214,
