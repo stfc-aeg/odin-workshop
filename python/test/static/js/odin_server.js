@@ -31,9 +31,11 @@ function update_api_adapters() {
 function update_background_task() {
 
     $.getJSON('/api/' + api_version + '/workshop/background_task', function(response) {
-        var task_count = response.background_task.count;
+        var task_count_ioloop = response.background_task.ioloop_count;
+        var task_count_thread = response.background_task.thread_count;
         var task_enabled = response.background_task.enable;
-        $('#task-count').html(task_count);
+        $('#task-count-ioloop').html(task_count_ioloop);
+        $('#task-count-thread').html(task_count_thread);
         $('#task-enable').prop('checked', task_enabled);
     });
 }
