@@ -155,6 +155,11 @@ created virtual environment CPython3.8.3.final.0-64 in 2470ms
   activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
 ```
 
+To activate this virtual environment, execute command:
+```
+$ source odin-workshop-3.8.3/bin/activate
+```
+
 * Clone `odin-control` from GitHub:
 
 Execute command:
@@ -290,7 +295,7 @@ optional arguments:
 
 Execute commands:
 ```
-$ cd test
+$ cd tests
 ```
 
 ```
