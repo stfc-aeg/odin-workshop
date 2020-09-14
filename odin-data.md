@@ -13,6 +13,9 @@
   * Create development environment
   * Clone, build and install odin-data
   * Clone, build and install project-specific plugins
+  * Install Project-specific Frame Processor Configuration
+  * Edit Frame Receiver Configuration
+  * Install Excalibur Packet Capture File
 * Further discussion topics
 
 ## odin-data
@@ -133,13 +136,24 @@ $ ./bin/frameReceiver --debug=2 --config=config/data/fr_test_excalibur_1.config
 
 2. Start FP instance (in second terminal):
 ```
-$cd <<project_installed_dir>>
-$./bin/frameProcessor --config=config/data/fp_test_excalibur_1.config
+$ cd <<project_installed_dir>>
+$ ./bin/frameProcessor --debug=2 --logconfig=config/data/fp_log4cxx.xml --json=config/data/excalibur-fp.json
 ```
 
-3. Send data - in this case captured packet playback:
+3. Set up python virtual environment and install dpkt (alternatively, use the odin-control virtualenv if you have one):
+
 ```
-$ python ../excalibur-detector/data/tools/python/excalibur_frame_producer.py -a 127.0.0.1 -p 61649 -n 1 pcap/excalibur_10_frames_tpcount_2000.pcap 
+$ cd <<project_installed_dir>>
+$ module load python/3-8
+$ virtualenv odin-virtualenv
+$ source odin-virtualenv/bin/activate
+$ pip install dpkt
+
+```
+
+4. Send data - in this case captured packet playback:
+```
+$ python ../excalibur-detector/data/tools/python/excalibur_frame_producer.py -a 127.0.0.1 -p 61649 -n 10 pcap/excalibur_10_frames_tpcount_2000.pcap 
 I Extracting EXCALIBUR frame packets from PCAP file pcap/excalibur_10_frames_tpcount_2000.pcap
 I Found 10 frames in file with a total of 1320 packets and 10496480 bytes
 I Launching threads to send frames to 1 destination ports
@@ -150,7 +164,7 @@ I Sent 1 frames with a total of 132 packets and 1049648 bytes, dropping 0 packet
 * Can experiment with e.g. varying debug levels to see more/less output (from FR in particular)
 * Logging configurable, goes to stdout and to log files (see config)
 * Can configure to varying degree from command line, config file and client control connection (not shown here)
-* Default output file location from FP is /tmp/test.hdf5
+* Default output file location from FP is /tmp/test_000001.h5
 
 ![EXCALIBUR image](images/excalibur.png)
 
@@ -196,7 +210,7 @@ boost/1-67-0   msgpack-c/2-1-5  python/3       ruby/2        xilinx/2017-2
 
 * Load the correct modules for odin-development:
 ```
-$ module load boost/1-67-0 hdf5/1-10-0 zeromq/4-2-3 log4cxx/0-10-0 blosc/1-13-5
+$ module load boost/1-67-0 hdf5/1-10-0 zeromq/4-2-3 log4cxx/0-10-0 blosc/1-14-4
 ```
 * Sets up your shell environment with various paths etc:
 ```
@@ -209,7 +223,7 @@ $ echo $ZEROMQ_ROOT
 $ echo $LOG4CXX_ROOT
 /aeg_sw/tools/CentOS6-x86_64/log4cxx/0-10-0/prefix
 $ echo $BLOSC_ROOT
-/aeg_sw/tools/CentOS7-x86_64/c-blosc/1-13-5/prefix
+/aeg_sw/tools/CentOS7-x86_64/c-blosc/1-14-4/prefix
 ```
 
 * Create a project development dir (using AEG path convention if appropriate)
@@ -221,9 +235,9 @@ $ cd ~/develop/projects/<project-name>
 
 ### Clone, build and install odin-data
 
-* Clone `odin-data` repo from Github:
+* Clone `odin-data` repo from Github (ensuring the latest tagged release is used):
 ```
-$ git clone https://github.com/odin-detector/odin-data.git
+$ git clone -b 1.4.0 https://github.com/odin-detector/odin-data.git
 Initialized empty Git repository in <home_dir>/develop/projects/odin-demo/odin-data/.git/
 remote: Counting objects: 5189, done.
 remote: Compressing objects: 100% (69/69), done.
@@ -293,8 +307,8 @@ Looking for pcap headers and libraries
 -- Performing Test PCAP_LINKS - Success
 
 Looking for blosc headers and libraries
--- Searching Blosc Root dir: /aeg_sw/tools/CentOS7-x86_64/c-blosc/1-13-5/prefix
--- Found Blosc: /aeg_sw/tools/CentOS7-x86_64/c-blosc/1-13-5/prefix/lib/libblosc.so
+-- Searching Blosc Root dir: /aeg_sw/tools/CentOS7-x86_64/c-blosc/1-14-4/prefix
+-- Found Blosc: /aeg_sw/tools/CentOS7-x86_64/c-blosc/1-14-4/prefix/lib/libblosc.so
 
 Searching for HDF5
 -- HDF5_ROOT set: /aeg_sw/tools/CentOS7-x86_64/hdf5/1-10-4/prefix
@@ -450,9 +464,9 @@ Install the project...
 $ cd ~/develop/projects/<project-name>
 ```
 
-* Clone the appropriate repo from Github:
+* Clone the appropriate repo from Github (ensuring the last tagged release is used):
 ```
-$ git clone https://github.com/dls-controls/excalibur-detector.git
+$ git clone -b 0-10-1 https://github.com/dls-controls/excalibur-detector.git
 ```
 * ***NB project-specific repo may contain both `control` and `data` directories***
 
@@ -550,6 +564,53 @@ Install the project...
 -- Installing: <home_dir>/develop/projects/odin-demo/install/lib/libExcaliburFrameDecoder.so
 -- Installing: <home_dir>/develop/projects/odin-demo/install/lib/libExcaliburProcessPlugin.so
 ```
+
+### Install Project-specific Frame Processor Configuration
+
+* The configuration file for this workshop will combine several plugins for use with the frames from the packet capture included later on: 
+   - FileWriterPlugin (for export to .hdf5/.h5)
+   - OffsetAdjustPlugin (to account for the initial frame of the capture starting at 54)
+   - ExcaliburProcessPlugin (Excalibur-specific processing)
+
+* This config is stored in the odin-workshop repository. Unless you have cloned it elsewhere (to complete the odin-control workshop, for example), you can clone it at the same level as excalibur-detector:
+```
+cd ../../../
+git clone https://github.com/stfc-aeg/odin-workshop.git
+```
+
+* Copy the Frame Processor configuration to the install directory:
+```
+cp ./odin-workshop/configs/excalibur-fp.json ./install/config/data/
+```
+
+* The Frame Processor requires hard-coded locations to find the plugins included in the `lib` folder.
+Use find-and-replace in your editor of choice to replace the text `<project-location>` in `./install/config/data/excalibur_fp.json` with the **full path from root** of your project where the `install` directory is found.
+For example:
+```
+<project-location> --> /u/<user-name>/develop/projects/<project-name>
+```
+
+### Edit Frame Receiver Configuration
+
+* Set the host IP to localhost in `install/config/data/fr_test_excalibur_1.config`, so that `ipaddress=127.0.0.1`.
+* Append to the end of the file on a new line: `rxbuffer=300000000`.
+
+### Install Excalibur Packet Capture File
+
+Instead of live data, a packet capture of Excalibur frames has been provided to feed to the Frame Receiver.
+
+* Make a directory to place the capture file into in the project install directory:
+```
+cd <<project-install-directory>>
+mkdir pcap
+```
+
+* Download the capture file into the new directory:
+```
+$ curl -k "https://te7aegserver.te.rl.ac.uk/pcap/excalibur_10_frames_tpcount_2000.pcap" --output "./pcap/excalibur_10_frames_tpcount_2000.pcap"
+```
+
+
 * And you're ready to try to reproduce the demo!
 
 ## Further discussion topics
