@@ -136,11 +136,22 @@ $ ./bin/frameReceiver --debug=2 --config=config/data/fr_test_excalibur_1.config
 
 2. Start FP instance (in second terminal):
 ```
-$cd <<project_installed_dir>>
+$ cd <<project_installed_dir>>
 $ ./bin/frameProcessor --debug=2 --logconfig=config/data/fp_log4cxx.xml --json=config/data/excalibur-fp.json
 ```
 
-3. Send data - in this case captured packet playback:
+3. Set up python virtual environment and install dpkt (alternatively, use the odin-control virtualenv if you have one):
+
+```
+$ cd <<project_installed_dir>>
+$ module load python/3-8
+$ virtualenv odin-virtualenv
+$ source odin-virtualenv/bin/activate
+$ pip install dpkt
+
+```
+
+4. Send data - in this case captured packet playback:
 ```
 $ python ../excalibur-detector/data/tools/python/excalibur_frame_producer.py -a 127.0.0.1 -p 61649 -n 10 pcap/excalibur_10_frames_tpcount_2000.pcap 
 I Extracting EXCALIBUR frame packets from PCAP file pcap/excalibur_10_frames_tpcount_2000.pcap
@@ -563,7 +574,7 @@ Install the project...
 
 * This config is stored in the odin-workshop repository. Unless you have cloned it elsewhere (to complete the odin-control workshop, for example), you can clone it at the same level as excalibur-detector:
 ```
-cd ../../
+cd ../../../
 git clone https://github.com/stfc-aeg/odin-workshop.git
 ```
 
