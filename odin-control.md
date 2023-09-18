@@ -567,7 +567,7 @@ Terminal output
 
 Execute command:
 ```
-$ http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task inteval:=0.1
+$ http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task interval:=0.1
 ```
 
 Terminal output
