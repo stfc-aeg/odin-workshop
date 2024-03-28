@@ -388,7 +388,7 @@ Terminal output:
 
 Execute command:
 ```
-$ http PUT http:/127.0.0.1:8888/api/0.1/dummy/test_put
+$ http PUT http://127.0.0.1:8888/api/0.1/dummy/test_put
 ```
 
 Terminal output:
@@ -418,7 +418,7 @@ Terminal output (may not be identical to this):
 
 Execute command:
 ```
-$ http http:/127.0.0.1:8888/api/0.1/system_info
+$ http http://127.0.0.1:8888/api/0.1/system_info
 ```
 
 Terminal output:
