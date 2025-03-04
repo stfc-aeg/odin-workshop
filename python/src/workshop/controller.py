@@ -8,7 +8,7 @@ from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.concurrent import run_on_executor
 
 from odin.adapters.parameter_tree import ParameterTree, ParameterTreeError
-from odin._version import get_versions as get_odin_versions
+from odin._version import __version__ as odin_version
 
 from workshop._version import __version__ as workshop_version
 
@@ -37,9 +37,6 @@ class WorkshopController():
         # Store initialisation time
         self.init_time = time.time()
 
-        # Get package version information
-        odin_versions = get_odin_versions()
-
         # Set the background task counters to zero
         self.background_ioloop_counter = 0
         self.background_thread_counter = 0
@@ -54,7 +51,7 @@ class WorkshopController():
 
         # Store all information in a parameter tree
         self.param_tree = ParameterTree({
-            'odin_version': odin_versions["version"],
+            'odin_version': odin_version,
             'workshop_version': workshop_version,
             'tornado_version': tornado.version,
             'server_uptime': (self.get_server_uptime, None),
