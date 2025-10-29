@@ -144,7 +144,7 @@ logic on UI side, do it in the adapter
 
 Execute command:
 ```
-$ virtualenv odin-workshop-3.9
+virtualenv odin-workshop-3.9
 ```
 
 Terminal output:
@@ -157,14 +157,14 @@ created virtual environment CPython3.9.final.0-64 in 2470ms
 
 To activate this virtual environment, execute command:
 ```
-$ source odin-workshop-3.9/bin/activate
+source odin-workshop-3.9/bin/activate
 ```
 
 * Clone `odin-control` from GitHub:
 
 Execute command:
 ```
-$ git clone https://github.com/odin-detector/odin-control.git
+git clone https://github.com/odin-detector/odin-control.git
 ```
 
 Terminal output:
@@ -185,11 +185,11 @@ Resolving deltas: 100% (1255/1255), done.
 
 Execute commands:
 ```
-$ cd odin-control
+cd odin-control
 ```
 
 ```
-$ pip install -e .
+pip install -e .
 ```
 
 Terminal output (may not be identical to this):
@@ -226,7 +226,7 @@ Successfully installed future-0.18.3 odin-control-1.4.0 psutil-5.9.5 pyzmq-25.1.
 
 Execute command:
 ```
-$ which odin_control
+which odin_control
 ```
 
 Terminal output:
@@ -236,7 +236,7 @@ Terminal output:
 
 Execute command:
 ```
-$ odin_control --help
+odin_control --help
 ```
 
 Terminal output:
@@ -303,11 +303,11 @@ optional arguments:
 
 Execute commands:
 ```
-$ cd tests
+cd tests
 ```
 
 ```
-$ odin_control --config config/test.cfg --logging=debug --debug_mode=1
+odin_control --config config/test.cfg --logging=debug --debug_mode=1
 ```
 
 Terminal output (may not be identical to this):
@@ -330,7 +330,7 @@ Terminal output (may not be identical to this):
 
 * For the next section, you will need to install HTTPie, done with the following command (make sure the virtual environment is activated):
 ```
-$ pip install httpie
+pip install httpie
 ```
 * HTTPie is designed for testing, debugging and interacting with APIs and HTTP servers:
 
@@ -338,7 +338,7 @@ $ pip install httpie
 
 Execute command:
 ```
-$ http http://127.0.0.1:8888/api
+http http://127.0.0.1:8888/api
 ```
 
 Terminal output:
@@ -350,7 +350,7 @@ Terminal output:
 
 Execute command:
 ```
-$ http http://127.0.0.1:8888/api/0.1/adapters
+http http://127.0.0.1:8888/api/0.1/adapters
 ```
 
 Terminal output:
@@ -364,7 +364,7 @@ Terminal output:
 
 Execute command:
 ```
-$ http http://127.0.0.1:8888/api/0.1/dummy
+http http://127.0.0.1:8888/api/0.1/dummy
 ```
 
 Terminal output:
@@ -376,7 +376,7 @@ Terminal output:
 
 Execute command:
 ```
-$ http http://127.0.0.1:8888/api/0.1/dummy/random_path
+http http://127.0.0.1:8888/api/0.1/dummy/random_path
 ```
 
 Terminal output:
@@ -388,7 +388,7 @@ Terminal output:
 
 Execute command:
 ```
-$ http PUT http://127.0.0.1:8888/api/0.1/dummy/test_put
+http PUT http://127.0.0.1:8888/api/0.1/dummy/test_put
 ```
 
 Terminal output:
@@ -402,7 +402,7 @@ Terminal output:
 
 Execute command:
 ```
-$ odin_control --config config/test_system_info.cfg
+odin_control --config config/test_system_info.cfg
 ```
 
 Terminal output (may not be identical to this):
@@ -418,7 +418,7 @@ Terminal output (may not be identical to this):
 
 Execute command:
 ```
-$ http http://127.0.0.1:8888/api/0.1/system_info
+http http://127.0.0.1:8888/api/0.1/system_info
 ```
 
 Terminal output:
@@ -445,7 +445,7 @@ Terminal output:
 
 Execute command:
 ```
-$ git clone https://github.com/stfc-aeg/odin-workshop.git
+git clone https://github.com/stfc-aeg/odin-workshop.git
 ```
 
 Terminal output:
@@ -461,11 +461,11 @@ Resolving deltas: 100% (71/71), done.
 
 Execute commands:
 ```
-$ cd odin-workshop/python
+cd odin-workshop/python
 ```
 
 ```
-$ tree -d
+tree -d
 ```
 
 Terminal output:
@@ -491,7 +491,7 @@ static resources to demonstrate web interaction.
 
 Execute command:
 ```
-$ pip install -e .
+pip install -e .
 ```
 
 Terminal output:
@@ -507,7 +507,7 @@ Successfully installed workshop-0+untagged.35.gde8626e
 
 Execute command:
 ```
-$ odin_control --config test/config/workshop.cfg
+odin_control --config test/config/workshop.cfg
 ```
 
 Terminal output: 
@@ -530,7 +530,7 @@ Terminal output:
 
 Execute command:
 ```
-$ http http://127.0.0.1:8888/api/0.1/workshop
+http http://127.0.0.1:8888/api/0.1/workshop
 ```
 
 Terminal output
@@ -550,7 +550,7 @@ Terminal output
 
 Execute command:
 ```
-$ http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task enable:=false
+http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task enable:=false
 ```
 
 Terminal output
@@ -567,7 +567,7 @@ Terminal output
 
 Execute command:
 ```
-$ http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task interval:=0.1
+http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task interval:=0.1
 ```
 
 Terminal output
