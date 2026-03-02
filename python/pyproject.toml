@@ -20,7 +20,7 @@ authors = [
     {name = "Tim Nicholls", email = "tim.nicholls@stfc.ac.uk"}
 ]
 dependencies = [
-    "odin_control @ git+https://git@github.com/odin-detector/odin-control.git",
+    "odin_control @ git+https://git@github.com/odin-detector/odin-control.git@dev_2.0",
     "tornado>=4.3",
     "future"
 ]

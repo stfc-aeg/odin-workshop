@@ -9,8 +9,8 @@ import sys
 
 from tornado.escape import json_decode
 
-from odin.adapters.adapter import ApiAdapter, ApiAdapterResponse, request_types, response_types
-from odin.adapters.parameter_tree import ParameterTreeError
+from odin_control.adapters.adapter import ApiAdapter, ApiAdapterResponse, request_types, response_types
+from odin_control.adapters.parameter_tree import ParameterTreeError
 
 from workshop.controller import WorkshopController, WorkshopError
 

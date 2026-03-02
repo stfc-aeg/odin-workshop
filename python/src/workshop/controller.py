@@ -7,8 +7,9 @@ from concurrent import futures
 from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.concurrent import run_on_executor
 
-from odin.adapters.parameter_tree import ParameterTree, ParameterTreeError
-from odin._version import __version__ as odin_version
+from odin_control.adapters.parameter_tree import ParameterTree, ParameterTreeError
+from odin_control.adapters.base_controller import BaseController
+from odin_control._version import __version__ as odin_version
 
 from workshop._version import __version__ as workshop_version
 
@@ -18,7 +19,7 @@ class WorkshopError(Exception):
     pass
 
 
-class WorkshopController():
+class WorkshopController(BaseController):
     """WorkshopController - class that extracts and stores information about system-level parameters."""
 
     # Thread executor used for background tasks
