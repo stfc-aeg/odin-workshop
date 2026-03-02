@@ -25,15 +25,15 @@ class WorkshopController(BaseController):
     # Thread executor used for background tasks
     executor = futures.ThreadPoolExecutor(max_workers=1)
 
-    def __init__(self, background_task_enable, background_task_interval):
+    def __init__(self, options=None):
         """Initialise the WorkshopController object.
 
         This constructor initlialises the WorkshopController object, building a parameter tree and
         launching a background task if enabled
         """
         # Save arguments
-        self.background_task_enable = background_task_enable
-        self.background_task_interval = background_task_interval
+        self.background_task_enable = bool(options.get('background_task_enable', False))
+        self.background_task_interval = float(options.get('background_task_interval', 1.0))
 
         # Store initialisation time
         self.init_time = time.time()
@@ -70,14 +70,14 @@ class WorkshopController(BaseController):
         """
         return time.time() - self.init_time
 
-    def get(self, path):
+    def get(self, path, with_metadata=False):
         """Get the parameter tree.
 
         This method returns the parameter tree for use by clients via the Workshop adapter.
 
         :param path: path to retrieve from tree
         """
-        return self.param_tree.get(path)
+        return self.param_tree.get(path, with_metadata)
 
     def set(self, path, data):
         """Set parameters in the parameter tree.
