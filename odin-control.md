@@ -538,6 +538,47 @@ Terminal output
 
 Execute command:
 ```
+http http://127.0.0.1:8888/api/workshop 'accept:application/json;metadata=true'
+```
+
+Terminal output
+```
+{
+    "background_task": {
+        "enable": {
+            "type": "bool",
+            "value": true,
+            "writeable": true
+        },
+        "interval": {
+            "type": "float",
+            "value": 1.0,
+            "writeable": true
+        },
+        "ioloop_count": {
+            "type": "int",
+            "value": 8,
+            "writeable": false
+        },
+        "thread_count": {
+            "type": "int",
+            "value": 8,
+            "writeable": false
+        }
+    },
+    "odin_version": "1.6.1.dev11+g39ca82818",
+    "server_uptime": {
+        "type": "float",
+        "value": 8.76708197593689,
+        "writeable": false
+    },
+    "tornado_version": "6.5.4",
+    "workshop_version": "0.1.dev44+g2f24dc82b.d20260302"
+}
+```
+
+Execute command:
+```
 http PUT http://127.0.0.1:8888/api/workshop/background_task enable:=false
 ```
 
