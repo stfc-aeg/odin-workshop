@@ -118,8 +118,8 @@ If you need to modify a parameter, trigger an command, launch a acquisition etc.
 
 * API access:
     * Adapters are bound into URL 'routes' in the HTTP server
-    * Are accessed via a single, versioned top-level API URL, 
-    e.g `http://127.0.0.1:8888/api/0.1/<adapter_name>/`
+    * Are accessed via a single, top-level API URL, 
+    e.g `http://127.0.0.1:8888/api/<adapter_name>/`
     * Can handle at least GET and PUT requests (+ optionally DELETE)
 
 * Static URLs:
@@ -338,19 +338,7 @@ pip install httpie
 
 Execute command:
 ```
-http http://127.0.0.1:8888/api
-```
-
-Terminal output:
-```
-{
-    "api" : 0.1
-}
-```
-
-Execute command:
-```
-http http://127.0.0.1:8888/api/0.1/adapters
+http http://127.0.0.1:8888/api/adapters
 ```
 
 Terminal output:
@@ -364,7 +352,7 @@ Terminal output:
 
 Execute command:
 ```
-http http://127.0.0.1:8888/api/0.1/dummy
+http http://127.0.0.1:8888/api/dummy
 ```
 
 Terminal output:
@@ -376,7 +364,7 @@ Terminal output:
 
 Execute command:
 ```
-http http://127.0.0.1:8888/api/0.1/dummy/random_path
+http http://127.0.0.1:8888/api/dummy/random_path
 ```
 
 Terminal output:
@@ -388,7 +376,7 @@ Terminal output:
 
 Execute command:
 ```
-http PUT http://127.0.0.1:8888/api/0.1/dummy/test_put
+http PUT http://127.0.0.1:8888/api/dummy/test_put
 ```
 
 Terminal output:
@@ -418,7 +406,7 @@ Terminal output (may not be identical to this):
 
 Execute command:
 ```
-http http://127.0.0.1:8888/api/0.1/system_info
+http http://127.0.0.1:8888/api/system_info
 ```
 
 Terminal output:
@@ -530,7 +518,7 @@ Terminal output:
 
 Execute command:
 ```
-http http://127.0.0.1:8888/api/0.1/workshop
+http http://127.0.0.1:8888/api/workshop
 ```
 
 Terminal output
@@ -550,7 +538,48 @@ Terminal output
 
 Execute command:
 ```
-http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task enable:=false
+http http://127.0.0.1:8888/api/workshop 'accept:application/json;metadata=true'
+```
+
+Terminal output
+```
+{
+    "background_task": {
+        "enable": {
+            "type": "bool",
+            "value": true,
+            "writeable": true
+        },
+        "interval": {
+            "type": "float",
+            "value": 1.0,
+            "writeable": true
+        },
+        "ioloop_count": {
+            "type": "int",
+            "value": 8,
+            "writeable": false
+        },
+        "thread_count": {
+            "type": "int",
+            "value": 8,
+            "writeable": false
+        }
+    },
+    "odin_version": "1.6.1.dev11+g39ca82818",
+    "server_uptime": {
+        "type": "float",
+        "value": 8.76708197593689,
+        "writeable": false
+    },
+    "tornado_version": "6.5.4",
+    "workshop_version": "0.1.dev44+g2f24dc82b.d20260302"
+}
+```
+
+Execute command:
+```
+http PUT http://127.0.0.1:8888/api/workshop/background_task enable:=false
 ```
 
 Terminal output
@@ -567,7 +596,7 @@ Terminal output
 
 Execute command:
 ```
-http PUT http://127.0.0.1:8888/api/0.1/workshop/background_task interval:=0.1
+http PUT http://127.0.0.1:8888/api/workshop/background_task interval:=0.1
 ```
 
 Terminal output
