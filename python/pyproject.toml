@@ -20,7 +20,7 @@ authors = [
     {name = "Tim Nicholls", email = "tim.nicholls@stfc.ac.uk"}
 ]
 dependencies = [
-    "odin-control==2.0.0",
+    "odin-control",
     "tornado>=4.3",
     "future"
 ]
